@@ -1,0 +1,3 @@
+rootProject.name='Collection'
+include ':app'
+include ':collection'

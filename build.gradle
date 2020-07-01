@@ -1,0 +1,78 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.3.70'
+    repositories {
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+
+    ext {
+        build_versions = [:]
+        build_versions.compile = 29
+        build_versions.min = 21
+        build_versions.target = 29
+        build_versions.tools = '29.0.3'
+
+        versions = [:]
+        versions.recyclerview = '1.1.0'
+        versions.lifecycle = '2.2.0'
+        versions.room = '2.2.5'
+        versions.dagger = '2.26'
+        versions.fragment_ktx = '1.2.4'
+        versions.reflect = '1.3.71'
+
+        libs = [:]
+        libs.recyclerview = "androidx.recyclerview:recyclerview:$versions.recyclerview"
+        libs.lifecycle = [
+                "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle",
+                "androidx.lifecycle:lifecycle-livedata:$versions.lifecycle",
+                "androidx.lifecycle:lifecycle-viewmodel:$versions.lifecycle",
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle",
+                "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+        ]
+
+        libs.room = [
+                "androidx.room:room-runtime:$versions.room",
+                "androidx.room:room-ktx:$versions.room",
+                "androidx.room:room-rxjava2:$versions.room"
+        ]
+
+        libs.room_kapt = "androidx.room:room-compiler:$versions.room"
+
+        libs.dagger = [
+                "com.google.dagger:dagger-android:$versions.dagger",
+                "com.google.dagger:dagger-android-support:$versions.dagger"
+        ]
+
+        libs.dagger_kapt = [
+                "com.google.dagger:dagger-compiler:$versions.dagger",
+                "com.google.dagger:dagger-android-processor:$versions.dagger"
+        ]
+
+        libs.fragment = "androidx.fragment:fragment-ktx:$versions.fragment_ktx"
+
+        libs.reflect = "org.jetbrains.kotlin:kotlin-reflect:$versions.reflect"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
