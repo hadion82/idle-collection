@@ -9,12 +9,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 fun Editable?.toSafeLong(defValue: Long = 0): Long =
-    if(this.isNullOrBlank() || !this.isDigitsOnly())
+    if (this.isNullOrBlank() || !this.isDigitsOnly())
         defValue
     else this.toString().toLong()
 
-fun <T> LiveData<T>.toRelativeLiveData() =
-    RelativeLiveData(this)
+fun <T, S> LiveData<T>.relateMap(
+    switchFunction: (T) -> LiveData<S?>,
+    observer: (S?) -> Unit
+) = RelativeLiveData(this)
+    .relateMap(switchFunction, observer)
 
 fun <T> LiveData<T>.collect(owner: LifecycleOwner, collect: (T) -> Unit) {
     this.observe(owner, Observer { collect(it) })
@@ -24,24 +27,26 @@ inline fun <T, reified VH : RecyclerView.ViewHolder> LiveData<List<T>>.sync(
     owner: LifecycleOwner,
     recyclerView: RecyclerView,
     adapter: ListAdapter<T, VH>
-): Mediator<T> {
-    if(recyclerView.adapter == null)
+): Submitter<T> {
+    if (recyclerView.adapter == null)
         recyclerView.adapter = adapter
     return this.sync(owner, adapter)
 }
 
-inline fun <T, reified VH : RecyclerView.ViewHolder> LiveData<List<T>>
-        .sync(owner: LifecycleOwner, adapter: ListAdapter<T, VH>): Mediator<T> {
-    val mediator = Mediator<T>()
+inline fun <T, reified VH : RecyclerView.ViewHolder> LiveData<List<T>>.sync(
+    owner: LifecycleOwner,
+    adapter: ListAdapter<T, VH>
+): Submitter<T> {
+    val submitter = Submitter<T>()
     this.observe(owner, Observer {
-        mediator.list = it
-        var list = mediator.before(it)
-        list = mediator.comparator?.run {
+        submitter.list = it
+        var list = submitter.beforeSubmission(it)
+        list = submitter.comparator?.run {
             list.sortedWith(this)
         } ?: list
         adapter.submitList(list) {
-            mediator.after(list)
+            submitter.afterSubmission(list)
         }
     })
-    return mediator
+    return submitter
 }

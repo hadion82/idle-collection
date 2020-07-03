@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -49,6 +50,9 @@ dependencies {
 
     implementation libs.recyclerview
     implementation libs.lifecycle
+
+    implementation libs.room
+    kapt libs.room_kapt
 
 }
 

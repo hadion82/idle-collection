@@ -5,7 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 
-class RelativeLiveData<T>(
+/**
+ * The RealiveLiveData observes the value of the reference.
+ * If there is a change in value, the registered LiveData will be notified of the change.
+ * LiveData then creates and returns LiveData to refer to the new value and begins observation.
+ */
+
+class RelativeLiveData<T> internal constructor(
     private val reference: LiveData<T>
 ) : MediatorLiveData<T>() {
 
